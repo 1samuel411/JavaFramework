@@ -1,4 +1,4 @@
-package com.samuel.hangman.window;
+package com.samuel.javaframework.window;
 
 import java.awt.Canvas;
 import java.awt.Color;
@@ -9,12 +9,12 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JOptionPane;
 
-import com.samuel.hangman.framework.ImageLoader;
-import com.samuel.hangman.framework.KeyInput;
-import com.samuel.hangman.framework.ObjectId;
-import com.samuel.hangman.framework.Texture;
-import com.samuel.hangman.objects.Block;
-import com.samuel.hangman.objects.Player;
+import com.samuel.javaframework.framework.ImageLoader;
+import com.samuel.javaframework.framework.KeyInput;
+import com.samuel.javaframework.framework.ObjectId;
+import com.samuel.javaframework.framework.Texture;
+import com.samuel.javaframework.objects.Block;
+import com.samuel.javaframework.objects.Player;
 
 public class Game extends Canvas implements Runnable 
 {
@@ -113,13 +113,8 @@ public class Game extends Canvas implements Runnable
 	private void tick()
 	{
 		handler.tick();
-		for(int i = 0; i < handler.objects.size(); i++)
-		{
-			if(handler.objects.get(i).getId() == ObjectId.Player)
-			{
-				camera.tick(handler.objects.get(i));
-			}
-		}
+		
+		camera.tick();
 	}
 	
 	private void render()

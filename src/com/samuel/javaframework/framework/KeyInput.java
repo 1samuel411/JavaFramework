@@ -1,9 +1,9 @@
-package com.samuel.hangman.framework;
+package com.samuel.javaframework.framework;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-import com.samuel.hangman.window.ObjectHandler;
+import com.samuel.javaframework.window.ObjectHandler;
 
 public class KeyInput extends KeyAdapter
 {

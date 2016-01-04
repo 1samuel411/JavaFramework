@@ -1,11 +1,11 @@
-package com.samuel.hangman.framework;
+package com.samuel.javaframework.framework;
 
 
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
-import com.samuel.hangman.window.Game;
+import com.samuel.javaframework.window.Game;
 
 public class Animation 
 {

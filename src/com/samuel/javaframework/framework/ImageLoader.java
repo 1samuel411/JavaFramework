@@ -1,4 +1,4 @@
-package com.samuel.hangman.framework;
+package com.samuel.javaframework.framework;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;

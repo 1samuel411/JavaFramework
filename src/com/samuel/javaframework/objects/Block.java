@@ -1,14 +1,14 @@
-package com.samuel.hangman.objects;
+package com.samuel.javaframework.objects;
 
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.util.LinkedList;
 
-import com.samuel.hangman.framework.GameObject;
-import com.samuel.hangman.framework.ObjectId;
-import com.samuel.hangman.framework.Texture;
-import com.samuel.hangman.window.Game;
+import com.samuel.javaframework.framework.GameObject;
+import com.samuel.javaframework.framework.ObjectId;
+import com.samuel.javaframework.framework.Texture;
+import com.samuel.javaframework.window.Game;
 
 public class Block extends GameObject
 {

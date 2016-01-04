@@ -1,4 +1,4 @@
-package com.samuel.hangman.window;
+package com.samuel.javaframework.window;
 
 import java.awt.Dimension;
 
