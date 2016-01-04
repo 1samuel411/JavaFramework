@@ -6,5 +6,6 @@ public enum ObjectId
 	Leg(),
 	Arms(),
 	Head(),
-	Block();
+	Grass(),
+	Dirt();
 }

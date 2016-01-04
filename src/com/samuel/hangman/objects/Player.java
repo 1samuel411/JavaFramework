@@ -1,33 +1,46 @@
 package com.samuel.hangman.objects;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.util.LinkedList;
 
+import com.samuel.hangman.framework.Animation;
 import com.samuel.hangman.framework.GameObject;
 import com.samuel.hangman.framework.ObjectId;
+import com.samuel.hangman.framework.Texture;
 import com.samuel.hangman.window.Game;
 import com.samuel.hangman.window.ObjectHandler;
 
 public class Player extends GameObject 
 {
 
-	private float width = 32, height = 64;
-	private final float speed = 5;
-	private final float jumpSpeed = -45;
-	private boolean jumping = false;
+	private float width = 35, height = 38;
+	private final float speed = 7;
+	private final float jumpSpeed = -40;
+	private boolean jumping = true;
 	
 	private boolean movingLeft = false;
 	private boolean movingRight = false;
 	
+	private float xOffset, xScale;
+	
 	private ObjectHandler handler;
+	private Texture texture = Game.getTextureInstance()	;
+	
+	private Animation playerWalkAnim;
+	private Animation playerIdleAnim;
 	
 	public Player(float x, float y, ObjectId id, ObjectHandler handler) 
 	{
 		super(x, y, id);
 		this.handler = handler;
+		
+		playerIdleAnim = new Animation(20, texture.player[0], texture.player[1], texture.player[2]);
+		playerWalkAnim = new Animation(10, texture.player[3], texture.player[4], texture.player[5], texture.player[6], texture.player[7], texture.player[8]);
+		
+		xOffset = x;
+		xScale = width;
 	}
 
 	public void tick(LinkedList<GameObject> object) 
@@ -43,13 +56,31 @@ public class Player extends GameObject
 				velocityY = max_speed;
 		}
 		
-		Collision(object);
+		collision(object);
+		
+		playerIdleAnim.runAnimation();
+		playerWalkAnim.runAnimation();
 	}
 
 	public void render(Graphics g) 
 	{
-		g.setColor(Color.blue);
-		g.fillRect((int)x, (int)y, (int)width, (int)height);
+		if(velocityX < 0) xScale = -width;
+		else if(velocityX > 0) xScale = width;
+		if(velocityX < 0) xOffset = x + width;
+		else if(velocityX > 0) xOffset = x;
+		
+		if(velocityX != 0)
+		{
+			if(!jumping)	playerWalkAnim.drawAnimation(g, (int)xOffset, (int)y, (int)xScale, (int)height);
+		}
+		else
+		{
+			if(!jumping)	playerIdleAnim.drawAnimation(g, (int)xOffset, (int)y, (int)xScale, (int)height);
+		}
+		if(jumping)
+		{
+			g.drawImage(texture.player[9], (int)xOffset, (int)y, (int)xScale, (int)height, null);
+		}
 	}
 
 	// bottom
@@ -113,7 +144,7 @@ public class Player extends GameObject
 		}
 	}
 	
-	public void Collision(LinkedList<GameObject> object)
+	public void collision(LinkedList<GameObject> object)
 	{
 		for(int i = 0; i < handler.objects.size(); i++)
 		{
