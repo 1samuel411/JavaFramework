@@ -2,15 +2,13 @@ package com.samuel.javaframework.framework;
 
 import java.awt.image.BufferedImage;
 
-import javax.swing.JOptionPane;
-
 public class Texture 
 {
 	SpriteSheet blockSheet, playerSheet;
 	private BufferedImage block_sheet = null;
 	private BufferedImage player_sheet = null;
 	
-	public BufferedImage[] blocks = new BufferedImage[2];
+	public BufferedImage[] blocks = new BufferedImage[7];
 	public BufferedImage[] player = new BufferedImage[10];
 	
 	public Texture()
@@ -27,10 +25,16 @@ public class Texture
 	
 	private void getTextures()
 	{
-		// dirt
-		blocks[0] = blockSheet.getImage(3, 1, 32, 32);
-		// grass
-		blocks[1] = blockSheet.getImage(4, 1, 32, 32);
+		// stone
+		blocks[0] = blockSheet.getImage(1, 1, 32, 32);
+		// stone floor
+		blocks[1] = blockSheet.getImage(2, 1, 32, 32);
+		// aniamted lava
+		blocks[2] = blockSheet.getImage(14, 15, 32, 32);
+		blocks[3] = blockSheet.getImage(15, 15, 32, 32);
+		blocks[4] = blockSheet.getImage(16, 15, 32, 32);
+		blocks[5] = blockSheet.getImage(15, 16, 32, 32);
+		blocks[6] = blockSheet.getImage(16, 16, 32, 32);
 		
 		// player idle anim
 		player[0] = playerSheet.getImage(1, 1, 40, 40);

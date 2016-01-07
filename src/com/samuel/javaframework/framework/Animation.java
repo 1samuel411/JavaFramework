@@ -27,6 +27,7 @@ public class Animation
 			animationImages[i] = args[i];
 		}
 		frameCount = args.length;
+		nextFrame();
 	}
 	
 	public void runAnimation()

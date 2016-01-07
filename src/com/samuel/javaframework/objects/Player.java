@@ -15,7 +15,7 @@ import com.samuel.javaframework.window.ObjectHandler;
 public class Player extends GameObject 
 {
 
-	private float width = 35, height = 38;
+	private float width = 33, height = 38;
 	private final float speed = 7;
 	private final float jumpSpeed = -40;
 	private boolean jumping = true;
@@ -31,16 +31,16 @@ public class Player extends GameObject
 	private Animation playerWalkAnim;
 	private Animation playerIdleAnim;
 	
-	public Player(float x, float y, ObjectId id, ObjectHandler handler) 
+	public Player(float x, float y, float scaleX, float scaleY, ObjectId id, ObjectHandler handler) 
 	{
-		super(x, y, id);
+		super(x, y, scaleX, scaleY, id);
 		this.handler = handler;
 		
 		playerIdleAnim = new Animation(20, texture.player[0], texture.player[1], texture.player[2]);
 		playerWalkAnim = new Animation(10, texture.player[3], texture.player[4], texture.player[5], texture.player[6], texture.player[7], texture.player[8]);
 		
 		xOffset = x;
-		xScale = width;
+		xScale = scaleX;
 	}
 
 	public void tick(LinkedList<GameObject> object) 
@@ -64,22 +64,22 @@ public class Player extends GameObject
 
 	public void render(Graphics g) 
 	{
-		if(velocityX < 0) xScale = -width;
-		else if(velocityX > 0) xScale = width;
-		if(velocityX < 0) xOffset = x + width;
+		if(velocityX < 0) xScale = -scaleX;
+		else if(velocityX > 0) xScale = scaleX;
+		if(velocityX < 0) xOffset = x + scaleX;
 		else if(velocityX > 0) xOffset = x;
 		
 		if(velocityX != 0)
 		{
-			if(!jumping)	playerWalkAnim.drawAnimation(g, (int)xOffset, (int)y, (int)xScale, (int)height);
+			if(!jumping)	playerWalkAnim.drawAnimation(g, (int)xOffset, (int)y, (int)xScale, (int)scaleY);
 		}
 		else
 		{
-			if(!jumping)	playerIdleAnim.drawAnimation(g, (int)xOffset, (int)y, (int)xScale, (int)height);
+			if(!jumping)	playerIdleAnim.drawAnimation(g, (int)xOffset, (int)y, (int)xScale, (int)scaleY);
 		}
 		if(jumping)
 		{
-			g.drawImage(texture.player[9], (int)xOffset, (int)y, (int)xScale, (int)height, null);
+			g.drawImage(texture.player[9], (int)xOffset, (int)y, (int)xScale, (int)scaleY, null);
 		}
 	}
 
@@ -149,7 +149,6 @@ public class Player extends GameObject
 		for(int i = 0; i < handler.objects.size(); i++)
 		{
 			GameObject curObject = handler.objects.get(i);
-			
 			if(curObject.getId() != ObjectId.Player)
 			{
 				// Bottom collision check
@@ -158,6 +157,7 @@ public class Player extends GameObject
 					y = curObject.getY() - height;
 					velocityY = 0;
 					jumping = false;
+					collisionEnter(curObject);
 				}
 				
 				// Top collision check
@@ -165,20 +165,31 @@ public class Player extends GameObject
 				{
 					y = curObject.getY() + (height / 2);
 					velocityY = 0;
+					collisionEnter(curObject);
 				}
 				
 				// Right collision check
 				if(this.getBoundsRight().intersects((curObject.getBounds())))
 				{
 					x = curObject.getX() - width;
+					collisionEnter(curObject);
 				}
 				
 				// Left collision check
 				if(this.getBoundsLeft().intersects((curObject.getBounds())))
 				{
 					x = curObject.getX() + width;
+					collisionEnter(curObject);
 				}
 			}
+		}
+	}
+	
+	public void collisionEnter(GameObject object)
+	{
+		if(object.getId() == ObjectId.Lava)
+		{
+			Game.application.reloadLevel();
 		}
 	}
 }

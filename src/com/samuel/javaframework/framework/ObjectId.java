@@ -3,9 +3,9 @@ package com.samuel.javaframework.framework;
 public enum ObjectId 
 {
 	Player(),
-	Leg(),
-	Arms(),
-	Head(),
-	Grass(),
-	Dirt();
+	Dirt(),
+	Lava(),
+	LavaTop(),
+	Stone(),
+	WalkStone();
 }

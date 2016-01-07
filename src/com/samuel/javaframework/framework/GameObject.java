@@ -8,17 +8,20 @@ import java.util.LinkedList;
 public abstract class GameObject 
 {
 	protected float x, y;
+	protected float scaleX, scaleY;
 	protected ObjectId id;
 	protected float velocityX = 0, velocityY = 0;
 	
 	protected boolean grounded;
-	protected final float gravity = 3.91f;
+	protected final float gravity = 2.91f;
 	protected float max_speed = 22;
 	
-	public GameObject(float x, float y, ObjectId id)
+	public GameObject(float x, float y, float scaleX, float scaleY, ObjectId id)
 	{
 		this.x = x;
 		this.y = y;
+		this.scaleX = scaleX;
+		this.scaleY = scaleY;
 		this.id = id;
 	}
 	

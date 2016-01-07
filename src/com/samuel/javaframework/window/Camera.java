@@ -16,10 +16,8 @@ public class Camera
 	
 	public void tick()
 	{
-		if(target == null)
-			target = ObjectHandler.instance.findObject(ObjectId.Player);
-		else
-			x = -target.getX() + (Game.WIDTH/2);
+		target = ObjectHandler.instance.findObject(ObjectId.Player);
+		x = -target.getX() + (Game.WIDTH/2);
 	}
 
 	public float getX() 
