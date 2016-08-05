@@ -2,14 +2,16 @@ package com.samuel.javaframework.framework;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import com.samuel.javaframework.window.ObjectHandler;
 
-public class KeyInput extends KeyAdapter
+public class Input extends KeyAdapter implements MouseListener
 {
 	ObjectHandler handler;
 	
-	public KeyInput(ObjectHandler handler)
+	public Input(ObjectHandler handler)
 	{
 		this.handler = handler;
 	}
@@ -38,5 +40,30 @@ public class KeyInput extends KeyAdapter
 			GameObject curObj = handler.objects.get(i);
 			curObj.keyReleased(e);
 		}
+	}
+
+	public void mouseClicked(MouseEvent e) 
+	{
+		System.out.println("HI");
+	}
+
+	public void mousePressed(MouseEvent e) 
+	{
+		
+	}
+
+	public void mouseReleased(MouseEvent e) 
+	{
+		
+	}
+
+	public void mouseEntered(MouseEvent e) 
+	{
+		
+	}
+	
+	public void mouseExited(MouseEvent e) 
+	{
+		
 	}
 }

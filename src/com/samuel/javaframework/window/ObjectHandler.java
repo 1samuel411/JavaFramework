@@ -5,7 +5,6 @@ import java.util.LinkedList;
 
 import com.samuel.javaframework.framework.GameObject;
 import com.samuel.javaframework.framework.ObjectId;
-import com.samuel.javaframework.objects.Block;
 
 public class ObjectHandler 
 {

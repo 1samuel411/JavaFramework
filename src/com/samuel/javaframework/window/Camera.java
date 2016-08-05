@@ -1,42 +1,42 @@
 package com.samuel.javaframework.window;
 
+import com.samuel.javaframework.framework.Base;
 import com.samuel.javaframework.framework.GameObject;
 import com.samuel.javaframework.framework.ObjectId;
 
-public class Camera 
+public class Camera extends Base
 {
-	private float x, y;
+	private Vector2 position;
 	private GameObject target;
 	
-	public Camera(float x, float y)
+	public Camera(Vector2 position)
 	{
-		this.x = x;
-		this.y = y;
+		this.position = position;
 	}
 	
 	public void tick()
 	{
 		target = ObjectHandler.instance.findObject(ObjectId.Player);
-		x = -target.getX() + (Game.WIDTH/2);
+		position.x = -target.getPosition().x + (Game.WIDTH/2);
 	}
 
-	public float getX() 
+	public double getX() 
 	{
-		return x;
+		return position.x;
 	}
 
-	public void setX(float x) 
+	public void setX(double x) 
 	{
-		this.x = x;
+		position.x = x;
 	}
 
-	public float getY() 
+	public double getY() 
 	{
-		return y;
+		return position.y;
 	}
 
-	public void setY(float y) 
+	public void setY(double y) 
 	{
-		this.y = y;
+		position.y = y;
 	}
 }

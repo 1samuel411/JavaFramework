@@ -5,23 +5,18 @@ import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.util.LinkedList;
 
-public abstract class GameObject 
+public abstract class GameObject extends Base
 {
-	protected float x, y;
-	protected float scaleX, scaleY;
+	protected Vector2 position;
+	protected Vector2 scale;
 	protected ObjectId id;
-	protected float velocityX = 0, velocityY = 0;
+	protected boolean trigger;
 	
-	protected boolean grounded;
-	protected final float gravity = 2.91f;
-	protected float max_speed = 22;
-	
-	public GameObject(float x, float y, float scaleX, float scaleY, ObjectId id)
+	public GameObject(Vector2 position, Vector2 scale, boolean trigger, ObjectId id)
 	{
-		this.x = x;
-		this.y = y;
-		this.scaleX = scaleX;
-		this.scaleY = scaleY;
+		this.position = position;
+		this.scale = scale;
+		this.trigger = trigger;
 		this.id = id;
 	}
 	
@@ -30,63 +25,36 @@ public abstract class GameObject
 	public abstract Rectangle getBounds();
 	public abstract void keyPressed(KeyEvent e);
 	public abstract void keyReleased(KeyEvent e);
-	
-	public float getX()
+	public void death()
 	{
-		return x;
-	}
-	public float getY()
-	{
-		return y;
-	}
-	public void setX(float x)
-	{
-		this.x = x;
-	}
-	public void setY(float y)
-	{
-		this.y = y;
+		System.out.println("should not show");
 	}
 	
-	public float getVelocityX()
+	public Vector2 getPosition()
 	{
-		return velocityX;
+		return position;
 	}
-	public float getVelocityY()
+	public void setPosition(Vector2 position)
 	{
-		return velocityY;
-	}
-	public void setVelocityX(float velocityX)
-	{
-		this.velocityX = velocityX;
-	}
-	public void setVelocityY(float velocityY)
-	{
-		this.velocityY = velocityY;
-	}
-	public boolean getGrounded() 
-	{
-		return grounded;
-	}
-	public void setGrounded(boolean kinematic) 
-	{
-		this.grounded = kinematic;
-	}
-	public float getGravity() 
-	{
-		return gravity;
+		this.position = position;
 	}
 	
-	public float getMax_speed() {
-		return max_speed;
+	public Vector2 getScale()
+	{
+		return scale;
 	}
-
-	public void setMax_speed(float max_speed) {
-		this.max_speed = max_speed;
+	public void setScale(Vector2 scale)
+	{
+		this.scale = scale;
 	}
 	
 	public ObjectId getId()
 	{
 		return id;
+	}
+	
+	public boolean getTrigger()
+	{
+		return trigger;
 	}
 }

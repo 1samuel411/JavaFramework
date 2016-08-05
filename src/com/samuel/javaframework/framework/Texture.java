@@ -4,21 +4,25 @@ import java.awt.image.BufferedImage;
 
 public class Texture 
 {
-	SpriteSheet blockSheet, playerSheet;
+	SpriteSheet blockSheet, playerSheet, enemySheet;
 	private BufferedImage block_sheet = null;
 	private BufferedImage player_sheet = null;
+	private BufferedImage enemy_sheet = null;
 	
 	public BufferedImage[] blocks = new BufferedImage[7];
-	public BufferedImage[] player = new BufferedImage[10];
+	public BufferedImage[] player = new BufferedImage[11];
+	public BufferedImage[] enemy = new BufferedImage[4];
 	
 	public Texture()
 	{
 		ImageLoader imageLoader = new ImageLoader();
 		block_sheet = imageLoader.loadImage("/sheets/block_sheet.png");
 		player_sheet = imageLoader.loadImage("/sheets/player_sheet.png");
+		enemy_sheet = imageLoader.loadImage("/sheets/enemy_1_sheet.png");
 		
 		blockSheet = new SpriteSheet(block_sheet);
 		playerSheet = new SpriteSheet(player_sheet);
+		enemySheet = new SpriteSheet(enemy_sheet);
 		
 		getTextures();
 	}
@@ -47,6 +51,16 @@ public class Texture
 		player[6] = playerSheet.getImage(4, 2, 40, 40);
 		player[7] = playerSheet.getImage(5, 2, 40, 40);
 		player[8] = playerSheet.getImage(6, 2, 40, 40);
+		// player jumping
 		player[9] = playerSheet.getImage(1, 3, 40, 40);
+		// player falling
+		player[10] = playerSheet.getImage(2, 3, 40, 40);
+		
+		// enemy1 idle anim
+		enemy[0] = enemySheet.getImage(1, 1, 72, 73);
+		// enemy1 walking anim
+		enemy[1] = enemySheet.getImage(2, 1, 72, 73);
+		enemy[2] = enemySheet.getImage(3, 1, 72, 73);
+		enemy[3] = enemySheet.getImage(4, 1, 72, 73);
 	}
 }

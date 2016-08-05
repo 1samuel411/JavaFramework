@@ -32,7 +32,7 @@ public class Animation
 	
 	public void runAnimation()
 	{
-		index+= (1);
+		index += (1);
 		if(index > (speed * Game.DELTA))
 		{
 			index = 0;

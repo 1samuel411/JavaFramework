@@ -3,126 +3,155 @@ package com.samuel.javaframework.objects;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
+import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 
 import com.samuel.javaframework.framework.Animation;
 import com.samuel.javaframework.framework.GameObject;
 import com.samuel.javaframework.framework.ObjectId;
+import com.samuel.javaframework.framework.Rigidbody;
 import com.samuel.javaframework.framework.Texture;
 import com.samuel.javaframework.window.Game;
 import com.samuel.javaframework.window.ObjectHandler;
 
 public class Player extends GameObject 
 {
-
-	private float width = 33, height = 38;
-	private final float speed = 7;
-	private final float jumpSpeed = -40;
+	
+	private Vector2 size = new Vector2(30, 38);
+	private final double speed = 7;
+	private final double jumpSpeed = -25;
 	private boolean jumping = true;
+	private boolean canMove = true;
+	private boolean canJump = true;
+	private boolean died = false;
+	private final double dieTime = 2;
+	private double curDieTime = 5;
 	
 	private boolean movingLeft = false;
 	private boolean movingRight = false;
 	
-	private float xOffset, xScale;
+	private double xOffset, xScale;
 	
-	private ObjectHandler handler;
 	private Texture texture = Game.getTextureInstance()	;
 	
 	private Animation playerWalkAnim;
 	private Animation playerIdleAnim;
 	
-	public Player(float x, float y, float scaleX, float scaleY, ObjectId id, ObjectHandler handler) 
+	private Rigidbody rigidbody;
+	
+	private LinkedList<ObjectId> ignoreList = new LinkedList<ObjectId>();
+	
+	public int jumpsLeft = 0;
+	public int jumps = 2;
+	
+	public Player(Vector2 position, Vector2 scale, boolean trigger, ObjectId id, ObjectHandler handler) 
 	{
-		super(x, y, scaleX, scaleY, id);
-		this.handler = handler;
-		
+		super(position, scale, trigger, id);
+
 		playerIdleAnim = new Animation(20, texture.player[0], texture.player[1], texture.player[2]);
 		playerWalkAnim = new Animation(10, texture.player[3], texture.player[4], texture.player[5], texture.player[6], texture.player[7], texture.player[8]);
 		
-		xOffset = x;
-		xScale = scaleX;
+		rigidbody = new Rigidbody(this, size, 1, handler);
+		
+		ignoreList.add(this.getId());
+		rigidbody.setIgnoreList(ignoreList);
+		
+		xOffset = getPosition().x;
+		xScale = getScale().x;
+	}
+	
+	public Rectangle getBounds()
+	{
+		 return rigidbody.getBounds();
 	}
 
 	public void tick(LinkedList<GameObject> object) 
 	{
-		x += velocityX * Game.DELTA;
-		y += velocityY * Game.DELTA;
+		rigidbody.tick();
 		
-		if(grounded == false || jumping == true)
+		if(died && (Game.TIME) > curDieTime)
 		{
-			velocityY += (gravity);
-			
-			if(velocityY >= max_speed )
-				velocityY = max_speed;
+			Game.application.reloadLevel();
 		}
 		
-		collision(object);
+		if(rigidbody.getGrounded() && (jumpsLeft < 1 || jumping))
+		{
+			jumping = false;
+			jumpsLeft = jumps;
+		}
+		
+		if(rigidbody.getGrounded() == false && jumpsLeft > 1)
+			jumpsLeft = 1;
 		
 		playerIdleAnim.runAnimation();
 		playerWalkAnim.runAnimation();
+		
+		if(!canMove)
+		{
+			movingLeft = false;
+			movingRight = false;
+		}
+		if(movingLeft)
+			rigidbody.setVelocity(new Vector2(speed, rigidbody.getVelocity().y));
+		else if(movingRight)
+			rigidbody.setVelocity(new Vector2(-speed, rigidbody.getVelocity().y));
+		else
+			rigidbody.setVelocity(new Vector2(0, rigidbody.getVelocity().y));
 	}
 
 	public void render(Graphics g) 
 	{
-		if(velocityX < 0) xScale = -scaleX;
-		else if(velocityX > 0) xScale = scaleX;
-		if(velocityX < 0) xOffset = x + scaleX;
-		else if(velocityX > 0) xOffset = x;
+		if(rigidbody.getVelocity().x < 0) xScale = -scale.x;
+		else if(rigidbody.getVelocity().x > 0) xScale = scale.x;
+		if(rigidbody.getVelocity().x < 0) xOffset = position.x + scale.x;
+		else if(rigidbody.getVelocity().x > 0) xOffset = position.x;
 		
-		if(velocityX != 0)
+		if(rigidbody.getVelocity().x != 0)
 		{
-			if(!jumping)	playerWalkAnim.drawAnimation(g, (int)xOffset, (int)y, (int)xScale, (int)scaleY);
+			if(!jumping && rigidbody.getGrounded())	playerWalkAnim.drawAnimation(g, (int)xOffset, (int)position.y, (int)xScale, (int)scale.y);
 		}
 		else
 		{
-			if(!jumping)	playerIdleAnim.drawAnimation(g, (int)xOffset, (int)y, (int)xScale, (int)scaleY);
+			if(!jumping && rigidbody.getGrounded())	playerIdleAnim.drawAnimation(g, (int)xOffset, (int)position.y, (int)xScale, (int)scale.y);
 		}
 		if(jumping)
 		{
-			g.drawImage(texture.player[9], (int)xOffset, (int)y, (int)xScale, (int)scaleY, null);
+			if(rigidbody.getVelocity().y < 0 || jumpsLeft > 0)
+				g.drawImage(texture.player[9], (int)xOffset, (int)position.y, (int)xScale, (int)scale.y, null);
+			else
+				g.drawImage(texture.player[10], (int)xOffset, (int)position.y, (int)xScale, (int)scale.y, null);
+		}
+		else
+		{
+			if(!rigidbody.getGrounded())
+			{
+				g.drawImage(texture.player[10], (int)xOffset, (int)position.y, (int)xScale, (int)scale.y, null);
+			}
 		}
 	}
 
-	// bottom
-	public Rectangle getBounds() 
-	{
-		return new Rectangle((int)x + (((int)width/2) - ((int)width/2)/2), (int)y + ((int)height/2), (int)width/2, (int)height/2);
-	}
-	// top
-	public Rectangle getBoundsTop() 
-	{
-		return new Rectangle((int)x + (((int)width/2) - ((int)width/2)/2), (int)y, (int)width/2, (int)height/2);
-	}
-	// right
-	public Rectangle getBoundsRight() 
-	{
-		return new Rectangle((int)x+(int)width-5, (int)y + 5, (int)5, (int)height - 10);
-	}
-	//left
-	public Rectangle getBoundsLeft() 
-	{
-		return new Rectangle((int)x, (int)y + 5, (int)5, (int)height - 10);
-	}
-	
 	// Key Input
 	public void keyPressed(KeyEvent e)
 	{
 		int key = e.getKeyCode();
 		
-		if(key == KeyEvent.VK_SPACE && !jumping)
+		if(key == KeyEvent.VK_SPACE || key == KeyEvent.VK_KP_UP || key == KeyEvent.VK_W)
 		{
-			jumping = true;
-			this.setVelocityY(jumpSpeed);
+			if(jumpsLeft > 0 && canJump)
+			{
+				jumpsLeft --;
+				jumping = true;
+				this.rigidbody.setVelocity(new Vector2(rigidbody.getVelocity().x, jumpSpeed));
+			}
 		}
 		if(key == KeyEvent.VK_D || key == KeyEvent.VK_RIGHT)
 		{
 			movingLeft = true;
-			this.setVelocityX(speed);
 		}
 		if(key == KeyEvent.VK_A || key == KeyEvent.VK_LEFT)
 		{
 			movingRight = true;
-			this.setVelocityX(-speed);
 		}
 	}
 	
@@ -134,62 +163,48 @@ public class Player extends GameObject
 		{
 			movingLeft = false;
 			if(!movingRight)
-				this.setVelocityX(0);
+				this.rigidbody.getVelocity().x = 0;
 		}
 		if(key == KeyEvent.VK_A || key == KeyEvent.VK_LEFT)
 		{
 			movingRight = false;
 			if(!movingLeft)
-				this.setVelocityX(0);
+				this.rigidbody.getVelocity().x = 0;
 		}
 	}
 	
-	public void collision(LinkedList<GameObject> object)
+	public void onCollisionEnter(Collision collision)
 	{
-		for(int i = 0; i < handler.objects.size(); i++)
+		if(collision.object.getId() == ObjectId.Lava)
+			death();
+	}
+	
+	public void onTriggerEnter(Collision collision)
+	{
+		if(collision.object.getId() == ObjectId.Enemy)
 		{
-			GameObject curObject = handler.objects.get(i);
-			if(curObject.getId() != ObjectId.Player)
+			if(collision.direction == Direction.DOWN)
 			{
-				// Bottom collision check
-				if(this.getBounds().intersects((curObject.getBounds())))
-				{
-					y = curObject.getY() - height;
-					velocityY = 0;
-					jumping = false;
-					collisionEnter(curObject);
-				}
-				
-				// Top collision check
-				if(this.getBoundsTop().intersects((curObject.getBounds())))
-				{
-					y = curObject.getY() + (height / 2);
-					velocityY = 0;
-					collisionEnter(curObject);
-				}
-				
-				// Right collision check
-				if(this.getBoundsRight().intersects((curObject.getBounds())))
-				{
-					x = curObject.getX() - width;
-					collisionEnter(curObject);
-				}
-				
-				// Left collision check
-				if(this.getBoundsLeft().intersects((curObject.getBounds())))
-				{
-					x = curObject.getX() + width;
-					collisionEnter(curObject);
-				}
+				collision.object.death();
+				this.rigidbody.setVelocity(new Vector2(rigidbody.getVelocity().x, jumpSpeed));
+				jumpsLeft = 0;
 			}
+			else
+				death();
 		}
 	}
 	
-	public void collisionEnter(GameObject object)
+	public void death()
 	{
-		if(object.getId() == ObjectId.Lava)
-		{
-			Game.application.reloadLevel();
-		}
+		movingLeft = false;
+		movingRight = false;
+		canMove = false;
+		canJump = false;
+		died = true;
+		List<ObjectId> newList = Arrays.asList(ObjectId.values());
+		ignoreList.addAll(newList);
+		rigidbody.setIgnoreList(ignoreList);
+		this.rigidbody.setVelocity(new Vector2(rigidbody.getVelocity().x, jumpSpeed));
+		curDieTime = dieTime + (Game.TIME);
 	}
 }
