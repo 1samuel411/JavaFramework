@@ -1,8 +1,8 @@
-#S-Engine (Java Framework)
+# S-Engine (Java Framework)
 
 - A completey open sourced and customizable game engine created in Java.
 
-#How it works
+# How it works
 
 - The game is launched via the Game.java class where it then opens up a window based on the options and also creates a new Game instance.
 
@@ -24,7 +24,3 @@
 	* GameObject inherits from the Base.java class which contains variables that the engine will use such as, RaycastHit, Collision, Vector2, etc.
 
 - There is a demo game already created, take a look and play with it and figure out how it works :>
-
-#Contact
-
-You can contact me anytime by phone or email, +1 (239) 362 - 6590, or, armi.sam99@gmail.com.
